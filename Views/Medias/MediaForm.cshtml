@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "MediasForm";
+}
+
+@model Models.Media
+
+<form class="form" action="/Medias/@ViewBag.Action" method="POST">
+    @Html.AntiForgeryToken() <!-- Injection de jeton anti contrefaçon de formulaire -->
+    <label for="Title">Titre</label>
+    <input id="Title"
+           name="Title"
+           class="form-control"
+           placeholder="Titre"
+           value="@Model.Title"
+           required
+           RequireMessage="Veuillez entrer un titre" />
+    <!-- Category -->
+    <label for="Category" class="form-label">Catégorie</label>
+    <input type="text"
+           list="Categories"
+           class="form-control Alpha"
+           name="Category"
+           id="Catgory" placeholder="Categorie"
+           value="@Model.Category"
+           required
+           RequireMessage="Veuillez entrer une catégorie"
+           InvalidMessage="La catégorie comporte un caractère illégal" />
+    <datalist id="Categories">
+        @foreach (var category in DAL.DB.MediasCategories())
+        {
+            <option value="@category">@category</option>
+        }
+    </datalist>
+    <label for="Description" class="form-label">Description</label>
+    <textarea class="form-control"
+              name="Description"
+              id="Description"
+              placeholder="Description"
+              rows="9"
+              required
+              RequireMessage="Veuillez entrer une Description">@Model.Description</textarea>
+
+    <label for="YoutubeId" class="form-label">Id du media Youtube</label>
+    <input id="YoutubeId" name="YoutubeId"
+           class="form-control" placeholder="Id youtube" value="@Model.YoutubeId"
+           required
+           RequireMessage="Veuillez entrer un id du media Youtube"
+           CustomErrorMessage="Cet id est déjà utilisé" />
+    <img id="previewThumbnail" class="mediaThumbnailBig" src="https://img.youtube.com/vi/@Model.YoutubeId/mqdefault.jpg" loading="lazy">
+    <input id="submit" type="submit" value="Enregistrer" class="btn btn-primary" style="display:none">
+</form>
+
+<!-- Code de base venant de l'exemple ContactsJSON - Upgraded fait par Nicolas Chourot https: //github.com/Nicolas-Chourot/ContactsJSON-Upgraded/tree/master
+   Code modifié par Alexandre Rochefort Février 2026 -->

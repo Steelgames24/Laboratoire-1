@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Edit";
+}
+
+@model Models.Media
+@{
+    ViewBag.Action = "Edit";
+    Html.RenderPartial("MediaForm");
+}
+
+@section Scripts {  <!-- Cette section ne doit pas être placée dans une vue partielle -->
+    <script>
+        $(() => {
+            // Nécessaire pour la validation des champs de formulaire
+            initFormValidation();
+            addConflictValidation("/Medias/CheckConflict", 'YoutubeId' /* field unicity check */, 'submit' /* form submit button Id */);
+            $("#YoutubeId").on("change", function () {
+                let youtubeId = $("#YoutubeId").val();
+                if (youtubeId.indexOf("=") > -1)
+                    youtubeId = $("#YoutubeId").val().split("=")[1];
+                $("#YoutubeId").val(youtubeId.trim());
+                $("#previewThumbnail").attr("src", `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`)
+            })
+        })
+    </script>
+}
+
+<!-- Code de base venant de l'exemple ContactsJSON - Upgraded fait par Nicolas Chourot https: //github.com/Nicolas-Chourot/ContactsJSON-Upgraded/tree/master
+   Code modifié par Alexandre Rochefort Février 2026 -->

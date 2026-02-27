@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div id="MediaListPanel" class="mediaListLayout">
+    <!-- Periodicaly refreshed by object contactListPanel of class AutoRefreshedPanel -->
+</div>
+
+@section Scripts {
+    <script>
+        $(() => {
+            let mediasListAutoRefreshPanel = new AutoRefreshedPanel("MediaListPanel", "/Medias/GetMedias", 3, mediasListPostRefresh);
+            let categoriesSelectAutoRefreshPanel = new AutoRefreshedPanel("categorySelectPanel", "/Medias/GetMediasCategoriesList", -1 /* manually refreshed */, categoriesSelectPostRefresh);
+            let keywordsOnchangeTimer = null;
+
+            $("#searchInput").on('keyup', function () {
+                clearTimeout(keywordsOnchangeTimer);
+                /* delay request by 0.5 seconds */
+                keywordsOnchangeTimer = setTimeout(() => {
+                    window.location = "/Medias/SetSearchString?value=" + $("#searchInput").val();
+                }, 500 /* 0.5 seconds */);
+            });
+            $("#searchInput").on('search', function () { /* click on clear */
+                clearTimeout(keywordsOnchangeTimer);
+                window.location = "/Medias/SetSearchString?value=" + $("#searchInput").val();
+            });
+            $("#searchInput").focus(function () {
+                mediasListAutoRefreshPanel.pause();
+            });
+            $("#searchInput").blur(function () {
+                mediasListAutoRefreshPanel.restart();
+            });
+            function mediasListPostRefresh() {
+                categoriesSelectAutoRefreshPanel.refresh(true);
+            }
+            function categoriesSelectPostRefresh() {
+
+                $("#categorySelect").off();
+                $("#categorySelect").focus(function () {
+                    mediasListAutoRefreshPanel.pause();6
+                });
+                $("#categorySelect").blur(function () {
+                    mediasListAutoRefreshPanel.restart();
+                });
+                $("#categorySelect").on('change', function () {
+                    window.location = "/Medias/SetSearchCategory?value=" + $("#categorySelect").val();
+                });
+            }
+        })
+    </script>
+}
+
+   <!--  Code de base venant de l'exemple ContactsJSON - Upgraded fait par Nicolas Chourot https://github.com/Nicolas-Chourot/ContactsJSON-Upgraded/tree/master
+    Code modifié par Alexandre Rochefort Février 2026 -->

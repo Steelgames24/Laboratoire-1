@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "GetMediasCategoriesList";
+
+    List<string> categories = DAL.DB.MediasCategories();
+    string selectedCategory = (string)Session["SelectedCategory"];
+}
+
+<select id="categorySelect" class="form-control">
+    <option value="" selected>Toutes les catégories</option>
+    @foreach (var category in categories)
+    {
+        string selected = selectedCategory == category ? "selected" : "";
+        <option value="@category" @selected>@category</option>
+    }
+</select>
+
+<!-- Code de base venant de l'exemple ContactsJSON - Upgraded fait par Nicolas Chourot https: //github.com/Nicolas-Chourot/ContactsJSON-Upgraded/tree/master
+   Code modifié par Alexandre Rochefort Février 2026 -->
